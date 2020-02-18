@@ -41,7 +41,7 @@ describe('TodoMVC', function() {
     await page.goto(TEST_URL)
     const mainContainer = await page.$('div.todoapp')
     should.exist(mainContainer)
-    console.log(mainContainer.innerText);
+    console.log('x', mainContainer.innerText);
     await percySnapshot(page, this.test.fullTitle())
   })
 })
