@@ -39,58 +39,8 @@ describe('TodoMVC', function() {
 
   it('Loads the app', async function() {
     await page.goto(TEST_URL)
-    const mainContainer = await page.$('section.todoapp')
+    const mainContainer = await page.$('div.todoapp')
     should.exist(mainContainer)
     await percySnapshot(page, this.test.fullTitle())
-  })
-
-  it('With no todos, hides main section', async function() {
-    await page.goto(TEST_URL)
-    const hiddenMainSection = await page.$(".main[style*='display:none']")
-    should.exist(hiddenMainSection)
-  })
-
-  it('Accepts a new todo', async function() {
-    await page.goto(TEST_URL)
-    await page.type('.new-todo', 'New fancy todo')
-    await page.keyboard.press('Enter')
-    const todoCount = await page.evaluate(() => document.querySelectorAll('.todo-list li').length)
-    todoCount.should.eq(1)
-    await percySnapshot(page, 'Snapshot with new todo', {widths: [300]})
-  })
-
-  it('Lets you check off a todo', async function() {
-    await page.goto(TEST_URL)
-    await page.type('.new-todo', 'A thing to accomplish')
-    await page.keyboard.press('Enter')
-
-    let itemsLeft = await page.evaluate(() => document.querySelector('.todo-count').textContent)
-    itemsLeft.should.eq('1 item left')
-
-
-    await page.click('input.toggle')
-    itemsLeft = await page.evaluate(() => document.querySelector('.todo-count').textContent)
-    itemsLeft.should.eq('0 items left')
-    await percySnapshot(page, this.test.fullTitle(), {widths: [768, 992, 1200]})
-  })
-
-  it('Demonstrates scoping snapshot to a selector', async function() {
-    // Helper to scope a page to a selector
-    async function scopePage(page, selector) {
-      await page.evaluate(function(selector) {
-        let scopedContainer = document.querySelector(selector);
-        document.querySelector('body').innerHTML = scopedContainer.outerHTML
-      }, selector)
-    }
-
-    await page.goto(TEST_URL)
-
-    // Enter a todo, so that there is a todo list.
-    await page.type('.new-todo', 'New fancy todo')
-    await page.keyboard.press('Enter')
-
-    // Scope the page to just the todo list and snapshot
-    await scopePage(page, '.main')
-    await percySnapshot(page, '.todo-list scoped snapshot')
   })
 })
